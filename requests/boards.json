@@ -1,0 +1,69 @@
+[
+  {
+    "name": "Welcome Board",
+    "desc": "",
+    "descData": null,
+    "closed": true,
+    "idOrganization": null,
+    "pinned": null,
+    "invitations": null,
+    "shortLink": "j012SPS7",
+    "powerUps": [],
+    "dateLastActivity": "2013-11-02T20:17:10.298Z",
+    "idTags": [],
+    "id": "5272a8e262865d9173002b7f",
+    "invited": false,
+    "starred": false,
+    "url": "https://trello.com/b/j012SPS7/welcome-board",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "members",
+      "selfJoin": false,
+      "cardCovers": true,
+      "calendarFeedEnabled": false,
+      "background": "blue",
+      "backgroundColor": "#0079BF",
+      "backgroundImage": null,
+      "backgroundImageScaled": null,
+      "backgroundTile": false,
+      "backgroundBrightness": "unknown",
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "memberships": [
+      {
+        "id": "5272a8e262865d9173002b80",
+        "idMember": "4e6a7fad05d98b02ba00845c",
+        "memberType": "normal",
+        "unconfirmed": false,
+        "deactivated": false
+      },
+      {
+        "id": "5272a8e262865d9173002b87",
+        "idMember": "5272a8e262865d9173002b7e",
+        "memberType": "admin",
+        "unconfirmed": false,
+        "deactivated": false
+      }
+    ],
+    "subscribed": false,
+    "labelNames": {
+      "green": "",
+      "yellow": "",
+      "orange": "",
+      "red": "",
+      "purple": "",
+      "blue": "",
+      "sky": "",
+      "lime": "",
+      "pink": "",
+      "black": ""
+    },
+    "dateLastView": "2014-03-26T11:53:41.827Z",
+    "shortUrl": "https://trello.com/b/j012SPS7"
+  }
+]

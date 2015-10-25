@@ -3,6 +3,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
+var shell = require('gulp-shell');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
@@ -10,9 +11,9 @@ var $ = require('gulp-load-plugins')({
 
 gulp.task('partials', function () {
   return gulp.src([
-    path.join(conf.paths.src, '/app/**/*.html'),
-    path.join(conf.paths.tmp, '/serve/app/**/*.html')
-  ])
+      path.join(conf.paths.src, '/app/**/*.html'),
+      path.join(conf.paths.tmp, '/serve/app/**/*.html')
+    ])
     .pipe($.minifyHtml({
       empty: true,
       spare: true,
@@ -26,16 +27,16 @@ gulp.task('partials', function () {
 });
 
 gulp.task('html', ['inject', 'partials'], function () {
-  var partialsInjectFile = gulp.src(path.join(conf.paths.tmp, '/partials/templateCacheHtml.js'), { read: false });
+  var partialsInjectFile = gulp.src(path.join(conf.paths.tmp, '/partials/templateCacheHtml.js'), {read: false});
   var partialsInjectOptions = {
     starttag: '<!-- inject:partials -->',
     ignorePath: path.join(conf.paths.tmp, '/partials'),
     addRootSlash: false
   };
 
-  var htmlFilter = $.filter('*.html', { restore: true });
-  var jsFilter = $.filter('**/*.js', { restore: true });
-  var cssFilter = $.filter('**/*.css', { restore: true });
+  var htmlFilter = $.filter('*.html', {restore: true});
+  var jsFilter = $.filter('**/*.js', {restore: true});
+  var cssFilter = $.filter('**/*.css', {restore: true});
   var assets;
 
   return gulp.src(path.join(conf.paths.tmp, '/serve/*.html'))
@@ -45,13 +46,13 @@ gulp.task('html', ['inject', 'partials'], function () {
     .pipe(jsFilter)
     .pipe($.sourcemaps.init())
     .pipe($.ngAnnotate())
-    .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', conf.errorHandler('Uglify'))
+    .pipe($.uglify({preserveComments: $.uglifySaveLicense})).on('error', conf.errorHandler('Uglify'))
     .pipe($.sourcemaps.write('maps'))
     .pipe(jsFilter.restore)
     .pipe(cssFilter)
     .pipe($.sourcemaps.init())
     .pipe($.replace('../../bower_components/material-design-iconfont/iconfont/', '../fonts/'))
-    .pipe($.minifyCss({ processImport: false }))
+    .pipe($.minifyCss({processImport: false}))
     .pipe($.sourcemaps.write('maps'))
     .pipe(cssFilter.restore)
     .pipe(assets.restore())
@@ -66,8 +67,8 @@ gulp.task('html', ['inject', 'partials'], function () {
     }))
     .pipe(htmlFilter.restore)
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')))
-    .pipe($.size({ title: path.join(conf.paths.dist, '/'), showFiles: true }));
-  });
+    .pipe($.size({title: path.join(conf.paths.dist, '/'), showFiles: true}));
+});
 
 // Only applies for fonts from bower dependencies
 // Custom fonts are handled by the "other" task
@@ -84,15 +85,38 @@ gulp.task('other', function () {
   });
 
   return gulp.src([
-    path.join(conf.paths.src, '/**/*'),
-    path.join('!' + conf.paths.src, '/**/*.{html,css,js,less}')
-  ])
+      path.join(conf.paths.src, '/**/*'),
+      path.join('!' + conf.paths.src, '/**/*.{html,css,js,less}')
+    ])
     .pipe(fileFilter)
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
 });
 
-gulp.task('clean', function () {
-  return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')]);
+gulp.task('copy-electron-files', function () {
+  return gulp.src(path.join(conf.paths.src, '**electron**.js'))
+    .pipe(gulp.dest(path.join(conf.paths.dist, '/')))
 });
 
-gulp.task('build', ['html', 'fonts', 'other']);
+gulp.task('clean', function () {
+  return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/'), 'executables/**/*']);
+});
+
+gulp.task('build', ['html', 'fonts', 'other', 'copy-electron-files']);
+gulp.task('build-electron', ['build'], shell.task([
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=darwin --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo"',
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite',
+  //TODO: electron-packager statement for windows (above) does not accept icon parameter
+  //'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo.ico"',
+  // --icon="dist/assets/images/n1-logo"
+  // nor
+  // --icon="dist/assets/images/n1-logo.ico".
+  // Leads to an error at build time (run gulp inside the terminal/console)
+/**
+ * Error: Command `electron-packager dist/ "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo.ico"` failed with exit code 1
+ at ChildProcess.exithandler (child_process.js:751:12)
+ at ChildProcess.emit (events.js:110:17)
+ at maybeClose (child_process.js:1015:16)
+ at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
+ */
+  'open "executables/Naisone Trello Quick Add-darwin-x64/Naisone Trello Quick Add.app"'
+]));

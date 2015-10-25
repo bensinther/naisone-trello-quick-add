@@ -1,0 +1,90 @@
+<div layout="column" ng-controller="TodoController as todoCtrl">
+
+  <md-toolbar class="n1-grey">
+    <div class="md-toolbar-tools">
+      <!--TODO: path of image is wrong when developing, but is correct in final app. Reason: html files will be put in the templateCache and will then be in the folder dist/scripts/appxyz.js and the assets folder is then one level above.-->
+      <img src="assets/images/n1-logo.png" alt="Naisone Logo Long Shadow" width="50" style="padding-right: 20px">
+
+      <h2 class="md-flex" style="color: white">Naisone's Trello Quick Add</h2>
+    </div>
+  </md-toolbar>
+
+  <md-content flex layout-padding>
+    <form novalidate ng-submit="todoCtrl.addCard(form)" name="form"
+          ng-if="todoCtrl.trelloService.userState.isAuthorized">
+
+
+      <!--////////////////////////// Title -->
+
+      <div layout="column">
+        <md-input-container>
+          <label>Title of the Trello Card</label>
+          <input ng-model="todoCtrl.title" name="title" required autofocus>
+
+          <div ng-messages="form.title.$error" ng-if="form.$submitted || form.title.$touched">
+            <div ng-message="required" class="n1-required">Required field. Please fill out.</div>
+          </div>
+        </md-input-container>
+      </div>
+
+      <!--////////////////////////// Description -->
+      <div layout="column">
+        <md-input-container>
+          <label>Description of the Trello Card</label>
+          <input ng-model="todoCtrl.desc" name="desc">
+        </md-input-container>
+      </div>
+
+      <!--////////////////////////// Board -->
+
+      <!-- DONE md-option does not work as expected, see https://github.com/angular/material/issues/1601 -->
+      <div layout="column">
+        <md-select ng-model="todoCtrl.trelloService.userState.selectedBoardId"
+                   ng-change="todoCtrl.onBoardChanged()"
+                   name="boards"
+                   required
+                   placeholder="Board">
+          <!--TODO: necessary - inside the $watch inside the todo.controller.js already done.-->
+          <md-option ng-repeat="board in todoCtrl.boards | filter:{'closed':false}" value="{{board.id}}">
+            {{board.name}}
+          </md-option>
+        </md-select>
+        <div ng-messages="form.boards.$error" ng-if="form.$submitted || form.boards.$touched">
+          <div ng-message="required" class="n1-required">Required field. Please fill out.</div>
+        </div>
+      </div>
+
+      <!--////////////////////////// List -->
+
+      <div layout="column">
+        <md-select ng-model="todoCtrl.trelloService.userState.selectedListId"
+                   ng-change="todoCtrl.onListChanged()"
+                   name="lists"
+                   required
+                   placeholder="List">
+          <md-option ng-repeat="list in todoCtrl.lists" value="{{list.id}}">
+            {{list.name}}
+          </md-option>
+        </md-select>
+        <div ng-messages="form.lists.$error" ng-if="form.$submitted || form.lists.$touched">
+          <div ng-message="required" class="n1-required">Required field. Please fill out.</div>
+        </div>
+      </div>
+
+      <div layout="column">
+        <md-button class="md-raised md-primary" type="submit">
+          Add Card
+        </md-button>
+      </div>
+    </form>
+
+    <div ng-if="!todoCtrl.trelloService.userState.isAuthorized">
+      <p>First you need to authorize this application to access your Trello Boards</p>
+
+      <md-button class="anmiated infinite" ng-click="todoCtrl.authorize()">
+        Authorize
+      </md-button>
+    </div>
+  </md-content>
+
+</div>

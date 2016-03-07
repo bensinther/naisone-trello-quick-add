@@ -32,7 +32,7 @@ app.on('ready', function () {
 
   registerShortcuts();
 
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.webContents.on('did-finish-load', function () {
     mainWindow.setTitle('Naisone\'s Trello Quick Add');
   });
@@ -51,10 +51,10 @@ app.on('ready', function () {
       });
       //TODO Tray does not work - why? electron . does work. On electron-packager it does not work
       var trayMacPath = __dirname + '/assets/images/naisone-trello-quick-add-logo.png';
-       tray = new Tray(trayMacPath);
-       tray.on('clicked', function () {
-       toggle();
-       });
+      tray = new Tray(trayMacPath);
+      tray.on('click', function () {
+        toggle();
+      });
     }
 
     // Register a 'ctrl+alt+a' shortcut listener for Windws/Mac

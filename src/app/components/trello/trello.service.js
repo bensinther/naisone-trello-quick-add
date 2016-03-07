@@ -55,6 +55,7 @@
         },
         error: function error() {
           userState.isAuthorized = false;
+          delete $window.localStorage.trello_token;
           $log("unable to authorize user");
           defer.reject();
         }
@@ -68,13 +69,15 @@
 
       var token = $window.localStorage.trello_token;
 
-      if(token) {
-        userState.isAuthorized = true;
+      if(token != null) {
+        return $http({
+          method: 'GET',
+          url: apiHost + 'members/me/boards?key=' + apiKey + '&token=' + token
+        });
       }
-      return $http({
-        method: 'GET',
-        url: apiHost + 'members/me/boards?key=' + apiKey + '&token=' + token
-      });
+      else {
+        authorize();
+      }
     }
 
     function getLists() {

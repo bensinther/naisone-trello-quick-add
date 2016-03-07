@@ -5,11 +5,12 @@
     .module('n1ElectronTrelloTodo')
     .controller('TodoController', TodoController);
 
-  function TodoController($scope, TrelloService, localStorageService, toastr, $log) {
-
-    ////////////////////////// Init and View Bindings
+  function TodoController($scope, TrelloService, localStorageService, toastr, $log, $window) {
 
     var vm = this;
+
+    ////////////////////////// UI / View Bindings
+
     vm.boards = []; //boards to select
     vm.lists = []; //filled when a board is selected
 
@@ -23,29 +24,17 @@
     vm.addCard = addCard;
     vm.onBoardChanged = onBoardChanged;
     vm.onListChanged = onListChanged;
+    vm.reset = reset;
+
+    ////////////////////////// Init
 
     init();
-
-    ////////////////////////// Watcher
-
-    function onBoardChanged() {
-      var newValue = vm.trelloService.userState.selectedBoardId;
-      $log.info("changed selectedBoardId to: " + newValue);
-      localStorageService.set('selectedBoardId', newValue);
-      resetLists();
-      getLists();
-    }
-
-    function onListChanged() {
-      var newValue = vm.trelloService.userState.selectedListId;
-      $log.info("changed selectedListId to: " + newValue);
-      localStorageService.set('selectedListId', newValue);
-    }
 
     ////////////////////////// Implementation
 
     function init() {
-      getBoards();
+      authorize();
+      //getBoards();
     }
 
     function getBoards() {
@@ -101,5 +90,27 @@
     function resetLists() {
       TrelloService.resetLists(); //TODO needed?
     }
+
+    function reset() {
+      delete $window.localStorage.trello_token;
+      vm.trelloService.userState.isAuthorized = false;
+    }
+
+    ////////////////////////// Broadcast / Listener / Watcher
+
+    function onBoardChanged() {
+      var newValue = vm.trelloService.userState.selectedBoardId;
+      $log.info("changed selectedBoardId to: " + newValue);
+      localStorageService.set('selectedBoardId', newValue);
+      resetLists();
+      getLists();
+    }
+
+    function onListChanged() {
+      var newValue = vm.trelloService.userState.selectedListId;
+      $log.info("changed selectedListId to: " + newValue);
+      localStorageService.set('selectedListId', newValue);
+    }
+
   }
 })();

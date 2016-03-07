@@ -103,8 +103,8 @@ gulp.task('clean', function () {
 
 gulp.task('build', ['html', 'fonts', 'other', 'copy-electron-files']);
 gulp.task('build-electron', ['build'], shell.task([
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=darwin --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo"',
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite',
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=darwin --arch=x64 --out="executables"  --overwrite --icon="dist/assets/images/n1-logo"',
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables"  --overwrite',
   //TODO: electron-packager statement for windows (above) does not accept icon parameter
   //'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo.ico"',
   // --icon="dist/assets/images/n1-logo"

@@ -1,7 +1,7 @@
 #Naisone Trello Quick Add
 
 Productivity app for quick adding cards to a Trelloboard. 
-Just press  `cmd+ctrl+k` on a Mac or `ctrl+alt+a` on Windows (and Mac).
+Just press  `cmd+alt+k` on a Mac or `ctrl+alt+a` on Windows (and Mac).
 
 Initial Date: BS 25.10.2015
 

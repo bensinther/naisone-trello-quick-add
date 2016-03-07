@@ -58,3 +58,11 @@ That's it!
 
 ## Known Problems
 1. the file size is very big for Mac OS X (108 MB). I am wondering if Slack uses some compression algorithm (the Slack app has only 6 MB on Mac). See https://discuss.atom.io/t/electron-distribution-filesize/19143 for details.
+
+## Todos
+1. add bard.js as test helper
+2. add more unit tests
+3. add e2e tests, currently it is just the standard generator-gulp-angular e2e test
+4. make shortcut for opening quick add window configurable via settings inside the app
+5. windows build does not work with setting an app icon, Mac is working
+6. further TODOS inside src code

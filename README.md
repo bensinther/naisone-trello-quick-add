@@ -5,6 +5,10 @@ Just press  `cmd+alt+k` on a Mac or `ctrl+alt+a` on Windows (and Mac).
 
 Initial Date: BS 25.10.2015
 
+This is how it looks like:
+
+![Naisone Trello Quick Add](https://github.com/bensinther/naisone-trello-quick-add/blob/master/Naisone.Trello.Quick.Add.Screenshot.png)
+
 ## Important Notes
 Git Repo   
 https://bitbucket.org/naisone/052-trello-quick-add

@@ -4,6 +4,11 @@ var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
 var shell = require('gulp-shell');
+const zip = require('gulp-zip');
+var fs = require('fs');
+var runSequence = require('run-sequence');
+
+var packageVersion = JSON.parse(fs.readFileSync('./package.json')).version;
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
@@ -101,10 +106,28 @@ gulp.task('clean', function () {
   return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/'), 'executables/**/*']);
 });
 
-gulp.task('build', ['html', 'fonts', 'other', 'copy-electron-files']);
+gulp.task('zip', ['zip-mac', 'zip-win']);
+
+gulp.task('zip-mac', function() {
+  return gulp.src('executables/Trello-Quick-Add-darwin-x64/*')
+    .pipe(zip('Trello-Quick-Add.v' + packageVersion + '.Mac.zip'))
+    .pipe(gulp.dest('executables'));
+});
+
+gulp.task('zip-win', function() {
+  return gulp.src('executables/Trello-Quick-Add-darwin-x64/*')
+    .pipe(zip('Trello-Quick-Add.v' + packageVersion + '.Win.zip'))
+    .pipe(gulp.dest('executables'));
+});
+
+gulp.task('build', function(callback) {
+  runSequence(['html', 'fonts', 'other', 'copy-electron-files'], 'zip', callback);
+});
+
 gulp.task('build-electron', ['build'], shell.task([
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=darwin --arch=x64 --out="executables"  --overwrite --icon="dist/assets/images/n1-logo"',
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=win32 --arch=x64 --out="executables"  --overwrite',
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=darwin --arch=x64 --out="executables" --app-version' + packageVersion + '  --overwrite' +
+  ' --icon="dist/assets/images/n1-logo"',
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=win32 --arch=x64 --out="executables" --app-version ' + packageVersion + ' --overwrite',
   //TODO: electron-packager statement for windows (above) does not accept icon parameter
   //'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo.ico"',
   // --icon="dist/assets/images/n1-logo"

@@ -33,9 +33,6 @@ app.on('ready', function () {
   registerShortcuts();
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
-  mainWindow.webContents.on('did-finish-load', function () {
-    mainWindow.setTitle('Naisone\'s Trello Quick Add');
-  });
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
@@ -57,7 +54,7 @@ app.on('ready', function () {
       });
     }
 
-    // Register a 'ctrl+alt+a' shortcut listener for Windws/Mac
+    // Register a 'ctrl+alt+a' shortcut listener for Windows/Mac
     globalShortcut.register('ctrl+alt+a', function () {
       console.log('ctrl+alt+a is pressed');
       toggle();

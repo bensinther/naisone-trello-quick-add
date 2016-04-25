@@ -19,22 +19,33 @@ app.on('window-all-closed', function () {
     app.quit();
   }
 });
-
 app.on('ready', function () {
 
   var showMenu = true;
 
   mainWindow = new BrowserWindow({
-    width: 460,
-    height: 460,
+    width: 500,
+    height: 540,
     "node-integration": false
   });
 
   registerShortcuts();
+  hideAppIconInDock();
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
-  mainWindow.on('closed', function () {
-    mainWindow = null;
+  /*mainWindow.on('closed', function () {
+   mainWindow = null;
+   });*/
+
+  mainWindow.on('close', function() { //   <---- Catch close event
+
+    // The dialog box below will open, instead of your app closing.
+    /*require('dialog').showMessageBox({
+      message: "Close button has been pressed!",
+      buttons: ["OK"]
+    });*/
+    app.quit();
+
   });
 
   ////////////////////////// Implementation Details
@@ -50,6 +61,7 @@ app.on('ready', function () {
       var trayMacPath = __dirname + '/assets/images/naisone-trello-quick-add-logo.png';
       tray = new Tray(trayMacPath);
       tray.on('click', function () {
+        console.log("tray clicked");
         toggle();
       });
     }
@@ -63,7 +75,18 @@ app.on('ready', function () {
 
   function toggle() {
     showMenu = !showMenu;
-    showMenu ? mainWindow.show() : mainWindow.hide();
+    try {
+      showMenu ? mainWindow.show() : mainWindow.hide();
+    }
+    catch (exception) {
+      console.log("error happened: " + exception);
+    }
+  }
+
+  function hideAppIconInDock() {
+    if (process.platform == 'darwin') {
+      app.dock.hide();
+    }
   }
 
 });

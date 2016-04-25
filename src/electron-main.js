@@ -58,7 +58,7 @@ app.on('ready', function () {
         toggle();
       });
       //TODO Tray does not work - why? electron . does work. On electron-packager it does not work
-      var trayMacPath = __dirname + '/assets/images/naisone-trello-quick-add-logo.png';
+      var trayMacPath = __dirname + '/assets/images/tray-icon.png';
       tray = new Tray(trayMacPath);
       tray.on('click', function () {
         console.log("tray clicked");

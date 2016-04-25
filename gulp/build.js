@@ -7,6 +7,7 @@ var shell = require('gulp-shell');
 const zip = require('gulp-zip');
 var fs = require('fs');
 var runSequence = require('run-sequence');
+//var run = require('gulp-run');
 
 var packageVersion = JSON.parse(fs.readFileSync('./package.json')).version;
 
@@ -108,26 +109,42 @@ gulp.task('clean', function () {
 
 gulp.task('zip', ['zip-mac', 'zip-win']);
 
-gulp.task('zip-mac', function() {
-  return gulp.src('executables/Trello-Quick-Add-darwin-x64/*')
+gulp.task('zip-mac', function () {
+  return gulp.src('executables/Trello-Quick-Add-darwin-x64/**/*')
     .pipe(zip('Trello-Quick-Add.v' + packageVersion + '.Mac.zip'))
     .pipe(gulp.dest('executables'));
 });
 
-gulp.task('zip-win', function() {
-  return gulp.src('executables/Trello-Quick-Add-darwin-x64/*')
+gulp.task('zip-win', function () {
+  return gulp.src('executables/Trello-Quick-Add-darwin-x64/**/*')
     .pipe(zip('Trello-Quick-Add.v' + packageVersion + '.Win.zip'))
     .pipe(gulp.dest('executables'));
 });
 
-gulp.task('build', function(callback) {
-  runSequence(['html', 'fonts', 'other', 'copy-electron-files'], 'zip', callback);
+gulp.task('build', function (callback) {
+  runSequence('html', 'fonts', 'other', 'copy-electron-files', callback);
 });
 
 gulp.task('build-electron', ['build'], shell.task([
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=darwin --arch=x64 --out="executables" --app-version' + packageVersion + '  --overwrite' +
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' ' +
+  '"Trello-Quick-Add" ' +
+  '--platform=darwin ' +
+  '--arch=x64 ' +
+  '--out="executables" ' +
+  '--app-version="' + packageVersion + '" ' +
+  '--build-version="' + packageVersion + '" ' +
+  '--overwrite' +
   ' --icon="dist/assets/images/n1-logo"',
-  'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Trello-Quick-Add" --platform=win32 --arch=x64 --out="executables" --app-version ' + packageVersion + ' --overwrite',
+
+  'electron-packager ' + path.join(conf.paths.dist, '/') + ' ' +
+  '"Trello-Quick-Add" ' +
+  '--platform=win32 ' +
+  '--arch=x64 ' +
+  '--out="executables" ' +
+  '--app-version="' + packageVersion + '" ' +
+  '--build-version="' + packageVersion + '" ' +
+  '--overwrite',
+
   //TODO: electron-packager statement for windows (above) does not accept icon parameter
   //'electron-packager ' + path.join(conf.paths.dist, '/') + ' "Naisone Trello Quick Add" --platform=win32 --arch=x64 --out="executables" --version=0.34.0 --overwrite --icon="dist/assets/images/n1-logo.ico"',
   // --icon="dist/assets/images/n1-logo"
@@ -143,3 +160,13 @@ gulp.task('build-electron', ['build'], shell.task([
  */
   'open "executables/Trello-Quick-Add-darwin-x64/Trello-Quick-Add.app"'
 ]));
+//stream.on('end', callback); //TODO, does not get thrown, zip starts to early, better: use gulp-run. see https://github.com/sun-zheng-an/gulp-shell/issues/5 - last docpad
+// reference issue
+//stream.resume();
+
+gulp.task('default', ['build-electron']);
+
+//TODO does not work, as of shell.task does not emit an .on event, see above
+/*gulp.task('default', function(callback) {
+ runSequence('build-electron', 'zip', callback);
+ });*/

@@ -70,3 +70,4 @@ That's it!
 4. make shortcut for opening quick add window configurable via settings inside the app
 5. windows build does not work with setting an app icon, Mac is working
 6. further TODOS inside src code
+7. Gulp task zip does not work as expected: the output zip file is too small

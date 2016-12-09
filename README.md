@@ -3,7 +3,7 @@
 Productivity app for quick adding cards to a Trelloboard. 
 Just press  `cmd+alt+k` on a Mac or `ctrl+alt+a` on Windows (and Mac).
 
-Initial Date: BS 25.10.2015
+Initial Date: BS 25.10.2015, no no
 
 This is how it looks like:
 
